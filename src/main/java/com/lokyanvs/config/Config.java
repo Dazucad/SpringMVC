@@ -6,13 +6,12 @@ import com.lokyanvs.entities.PC;
 import com.lokyanvs.entities.Printer;
 import com.lokyanvs.entities.Product;
 import org.hibernate.SessionFactory;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.ComponentScan;
 import org.springframework.context.annotation.Configuration;
-import org.springframework.jdbc.datasource.DriverManagerDataSource;
 import org.springframework.web.servlet.config.annotation.EnableWebMvc;
 
-import javax.sql.DataSource;
 
 @Configuration
 @EnableWebMvc
@@ -20,12 +19,7 @@ import javax.sql.DataSource;
 public class Config {
 
     @Bean
-    public DataSource dataSource() {
-        return new DriverManagerDataSource("jdbc:h2:~/test", "sa", "");
-    }
-
-    @Bean
-    public SessionFactory sessionFactory(DataSource dataSource) {
+    public SessionFactory sessionFactory() {
         org.hibernate.cfg.Configuration configuration = new org.hibernate.cfg.Configuration();
         configuration.setProperty("hibernate.dialect", "org.hibernate.dialect.H2Dialect")
                 .setProperty("hibernate.show_sql", "true")
@@ -41,7 +35,7 @@ public class Config {
     }
 
     @Bean
-    public DaoClass daoClass(SessionFactory sessionFactory) {
+    public DaoClass daoClass(@Autowired SessionFactory sessionFactory) {
         return new DaoClass(sessionFactory);
     }
 
